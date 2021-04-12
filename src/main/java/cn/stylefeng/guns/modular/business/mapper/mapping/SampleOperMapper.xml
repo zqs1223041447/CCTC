@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.stylefeng.guns.modular.business.mapper.SampleOperMapper">
+
+    <!--  根据附件IDS查询附件信息  -->
+    <select id="getFileInfoListByFileIds"
+            resultType="cn.stylefeng.roses.kernel.file.api.pojo.response.SysFileInfoResponse">
+        SELECT file.file_id          AS fileId,
+               file.file_code        AS fileCode,
+               file.file_version     AS fileVersion,
+               file.file_status      AS fileStatus,
+               file.file_origin_name AS fileOriginName,
+               file.file_suffix      AS fileSuffix,
+               file.file_size_kb     AS fileSizeKb,
+               file.file_size_info   AS fileSizeInfo,
+               file.secret_flag      AS secretFlag,
+               file.file_object_name AS fileObjectName,
+               file.create_time      AS createTime
+        FROM sys_file_info file
+        WHERE file.del_flag = "N"
+        AND file.file_id IN
+        <foreach collection="fileIdList" separator="," open="(" close=")" item="fileId">
+            #{fileId}
+        </foreach>
+    </select>
+
+    <!--  附件列表  -->
+    <select id="fileInfoList" resultType="cn.stylefeng.roses.kernel.file.api.pojo.response.SysFileInfoListResponse">
+        SELECT file.file_id        AS fileId,
+            file.file_code         AS fileCode,
+            file.secret_flag       AS secretFlag,
+            file.file_bucket       AS fileBucket,
+            file.file_object_name AS fileObjectName,
+            file.file_location     AS fileLocation,
+            file.file_origin_name  AS fileOriginName,
+            file.file_suffix       AS fileSuffix,
+            file.file_size_info    AS fileSizeInfo,
+            file.file_version      AS fileVersion,
+            user.real_name   AS createUserName,
+            file.create_time       AS createTime,
+            file.del_flag          AS delFlag
+        FROM sys_file_info file
+        LEFT JOIN sys_user user ON user.user_id = file.create_user
+        <where>
+            <if test="sysFileInfoRequest.fileOriginName != null and sysFileInfoRequest.fileOriginName != '' ">
+                AND file.file_origin_name LIKE CONCAT('%',#{sysFileInfoRequest.fileOriginName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--  获取所有附件信息的code集合  -->
+    <select id="getFileCodeByFileIds" resultType="java.lang.Long">
+        SELECT
+        file.file_code
+        FROM
+        sys_file_info file
+        WHERE
+        file.file_id IN
+        <foreach collection="fileIdList" open="(" close=")" separator="," item="fileId">
+            #{fileId}
+        </foreach>
+        GROUP BY file.file_code
+    </select>
+
+    <!--  修改fileCodes下所有附件状态  -->
+    <update id="updateDelFlagByFileCodes">
+        UPDATE sys_file_info file
+        SET file.del_flag = #{delFlag}
+        WHERE file.file_code IN
+        <foreach collection="fileCodeList" open="(" close=")" separator="," item="fileCode">
+            #{fileCode}
+        </foreach>
+    </update>
+
+    <!--  修改fileIds下所有附件状态  -->
+    <update id="updateDelFlagByFileIds">
+        UPDATE sys_file_info file
+        SET file.del_flag = #{delFlag}
+        WHERE file.file_id IN
+        <foreach collection="fileIdList" open="(" close=")" separator="," item="fileId">
+            #{fileId}
+        </foreach>
+    </update>
+
+
+</mapper>
