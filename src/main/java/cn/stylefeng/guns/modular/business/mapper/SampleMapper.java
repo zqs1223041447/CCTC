@@ -24,6 +24,7 @@
  */
 package cn.stylefeng.guns.modular.business.mapper;
 
+import cn.stylefeng.guns.modular.business.entity.Sample;
 import cn.stylefeng.roses.kernel.file.api.pojo.request.SysFileInfoRequest;
 import cn.stylefeng.roses.kernel.file.api.pojo.response.SysFileInfoListResponse;
 import cn.stylefeng.roses.kernel.file.api.pojo.response.SysFileInfoResponse;
@@ -42,7 +43,7 @@ import java.util.List;
  * @author stylefeng
  * @date 2020/6/7 22:15
  */
-public interface SampleOperMapper extends BaseMapper<SysFileInfo> {
+public interface SampleMapper extends BaseMapper<Sample> {
 
     /**
      * 根据附件IDS查询附件信息
@@ -51,7 +52,7 @@ public interface SampleOperMapper extends BaseMapper<SysFileInfo> {
      * @author majianguo
      * @date 2020/12/27 12:57
      */
-    List<SysFileInfoResponse> getFileInfoListByFileIds(@Param("fileIdList") List<Long> fileIdList);
+    List<Sample> getSampleListByFileIds(@Param("SampleIdList") List<Long> SampleIdList);
 
     /**
      * 附件列表（有分页）
@@ -59,35 +60,7 @@ public interface SampleOperMapper extends BaseMapper<SysFileInfo> {
      * @author majianguo
      * @date 2020/12/27 12:57
      */
-    List<SysFileInfoListResponse> fileInfoList(@Param("page") Page<SysFileInfoListResponse> page, @Param("sysFileInfoRequest") SysFileInfoRequest sysFileInfoRequest);
+    List<Sample> SampleList(@Param("page") Page<Sample> page, @Param("sample")Sample sample );
 
-    /**
-     * 获取所有附件信息的code集合
-     *
-     * @param fileIdList 文件ID列表
-     * @author majianguo
-     * @date 2020/12/27 12:57
-     */
-    List<Long> getFileCodeByFileIds(@Param("fileIdList") List<Long> fileIdList);
-
-    /**
-     * 修改fielCodes下所有附件状态
-     *
-     * @param fileCodeList 文件CODE列表
-     * @param delFlag      是否删除
-     * @author majianguo
-     * @date 2020/12/27 12:56
-     */
-    void updateDelFlagByFileCodes(@Param("fileCodeList") List<Long> fileCodeList, @Param("delFlag") String delFlag);
-
-    /**
-     * 修改fileIds下所有附件状态
-     *
-     * @param fileIdList 文件ID列表
-     * @param delFlag    是否删除
-     * @author majianguo
-     * @date 2020/12/27 12:56
-     */
-    void updateDelFlagByFileIds(@Param("fileIdList") List<Long> fileIdList, @Param("delFlag") String delFlag);
-
+   
 }

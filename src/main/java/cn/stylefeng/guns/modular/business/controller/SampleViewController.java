@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @ApiResource(name = "文件管理界面")
-public class SampleOperViewController {
+public class SampleViewController {
 
     /**
      * 文件管理首页
@@ -22,7 +22,7 @@ public class SampleOperViewController {
      */
     @GetResource(name = "文件管理首页", path = "/view/sample")
     public String fileIndex() {
-        return "modular/business/sample_oper/sample.html";
+        return "modular/business/sample/sample.html";
     }
 
     /**
@@ -33,7 +33,8 @@ public class SampleOperViewController {
      */
     @GetResource(name = "文件详情页面", path = "/view/sampleDetails")
     public String details() {
-        return "modular/business/sample_oper/sample_details.html";
+        return "modular/business/sample/sample_details.html";
     }
 
+    
 }

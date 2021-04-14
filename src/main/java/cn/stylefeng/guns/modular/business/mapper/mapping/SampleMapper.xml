@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.stylefeng.guns.modular.business.mapper.SampleMapper">
+
+   
+    <sql id="Base_Column_List">
+    sample_id, sample_status, sample_bucket, sample_origin_name, sample_suffix, sample_size_kb, 
+    sample_object_name, sample_path, create_time, create_user, update_time, update_user, 
+    task_id, sample_type,sample_en_name,sample_zh_name,sample_introduction,update_user_name
+  </sql>
+   <!--  根据附件IDS查询附件信息  -->
+    <select id="getSampleListByFileIds"
+            resultType="cn.stylefeng.guns.modular.business.entity.Sample">
+        SELECT 
+                 <include refid="Base_Column_List" />
+        FROM zqs_sample
+        WHERE sample_id IN
+        <foreach collection="sampleIdList" separator="," open="(" close=")" item="fileId">
+            #{sampleId}
+        </foreach>
+    </select>
+
+    <!--  附件列表  -->
+    <select id="SampleList" resultType="cn.stylefeng.guns.modular.business.entity.Sample">
+        SELECT 
+   			<include refid="Base_Column_List" />
+        FROM zqs_sample sample
+      <!--   LEFT JOIN sys_user user ON user.user_id = file.create_user 
+        <where>
+            <if test="sysFileInfoRequest.fileOriginName != null and sysFileInfoRequest.fileOriginName != '' ">
+                AND file.file_origin_name LIKE CONCAT('%',#{sysFileInfoRequest.fileOriginName},'%')
+            </if>
+        </where> -->
+          <where>
+            <if test="sample.sampleType != ''">
+                AND sample.sample_type LIKE CONCAT('%',#{sample.sampleType},'%')        
+            </if>
+             <if test="sample.SampleZhName != ''">
+                AND sample.sample_zh_name LIKE CONCAT('%',#{sample.sampleZhName},'%')      
+            </if>
+             
+        </where>
+    </select>
+
+  <!--     获取所有附件信息的code集合  
+    <select id="getFileCodeByFileIds" resultType="java.lang.Long">
+        SELECT
+        file.file_code
+        FROM
+        sys_file_info file
+        WHERE
+        file.file_id IN
+        <foreach collection="fileIdList" open="(" close=")" separator="," item="fileId">
+            #{fileId}
+        </foreach>
+        GROUP BY file.file_code
+    </select> -->
+
+  
+
+   
+
+
+</mapper>

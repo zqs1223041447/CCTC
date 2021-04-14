@@ -1,0 +1,71 @@
+@layout("/layout/_form.html",{js:["/assets/modular/business/sample/sample_details.js"]}){
+
+<form class="layui-form" id="sampleForm" lay-filter="sampleForm" enctype="multipart/form-data">
+    <div class="layui-fluid" style="padding-bottom: 50px;">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form-item layui-row">
+                    <input id="sampleId" name="sampleId" type="hidden"/>
+
+                    <div class="layui-inline layui-col-md12">
+					
+                      <label class="layui-form-label layui-form-required">样本类型</label>
+						<div class="layui-input-block">
+							 <select id="sampleType" name="sampleType">
+									<option value="1">木马病毒</option>
+									<option value="2">勒索病毒</option>
+									<option value="3">蠕虫病毒</option>
+									<option value="4">黑客病毒</option>
+									<option value="5">脚本病毒</option>
+									<option value="6">宏病毒</option>
+									<option value="7">后门病毒</option>
+									<option value="8">病毒种植程序病毒</option>
+									<option value="9">破坏性程序病毒</option>
+									<option value="10">玩笑病毒</option>
+									<option value="11">捆绑机病毒</option>
+							</select>
+						 </div>
+                    </div>
+                    
+                   <div class="layui-inline layui-col-md12">
+                        <label class="layui-form-label layui-form-required">样本名称</label>
+                        <div class="layui-input-block">
+                            <input id="sampleZhName" name="sampleZhName" type="text" class="layui-input" autocomplete="off" />
+                        </div>
+                    </div>
+                   <div class="layui-inline layui-col-md12">
+                        <label class="layui-form-label layui-form-required">英文名称</label>
+                        <div class="layui-input-block">
+                            <input id="sampleEnName" name="sampleEnName" type="text" class="layui-input" autocomplete="off" />
+                        </div>
+                    </div>
+
+                   
+                    <div class="layui-inline layui-col-md12">
+                        <label class="layui-form-label">样本简介</label>
+                        <div class="layui-input-block">
+                            <textarea  id="sampleIntroduction" name="sampleIntroduction" class="layui-textarea" placeholder="请输入样本简介"></textarea>
+                        </div>
+                    </div>
+					 
+					
+					
+					<div class="layui-inline layui-col-md12">
+                       
+					  <button id="selectFile"   type="button" class="layui-btn layui-btn-normal" >提交样本</button>
+					  <button id="hideUpload" type="button" style="display: none"></button>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group-bottom text-center">
+
+		<button class="layui-btn" lay-filter="submit111" lay-submit>&emsp;更新&emsp;</button>
+		<!-- <button id="update" type="button" class="layui-btn" ew-event="closeDialog">&emsp;更新&emsp;</button> -->
+        <button id="cancel" type="button" class="layui-btn layui-btn-primary" ew-event="closeDialog">&emsp;关闭&emsp;</button>
+		
+    </div>
+</form>
+
+@}

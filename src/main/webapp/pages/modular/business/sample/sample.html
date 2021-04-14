@@ -1,4 +1,4 @@
-@layout("/layout/_container.html",{js:["/assets/modular/business/sample_oper/sample.js"]}){
+@layout("/layout/_container.html",{js:["/assets/modular/business/sample/sample.js"]}){
 
 <div class="layui-body-header">
     <span class="layui-body-header-title">样本操作</span>
@@ -11,24 +11,35 @@
                 <div class="layui-card-body">
                     <div class="layui-form toolbar">
                         <div class="layui-form-item">
+                            
                             <div class="layui-inline">
-                                <select name="fileLocation" lay-verify="">
-                                    <option value="">请选择存储位置</option>
-                                    <option value="4">本地</option>
-                                    <option value="1">阿里云</option>
-                                    <option value="2">腾讯云</option>
-                                    <option value="3">minio</option>
-                                </select>
+                                <input type="text" id="sampleZhName" name="sampleZhName" placeholder="样本名称" class="layui-input">
                             </div>
-                            <div class="layui-inline">
-                                <input type="text" id="fileOriginName" name="fileOriginName" placeholder="文件名称" class="layui-input">
-                            </div>
+							<div class="layui-inline">
+                          <!--  <select name="sampleType" disabled="disabled"> --> 
+						  <select id="sampleType" name="sampleType" >
+                                <option value="">样本类型</option>
+                                <option value="1">木马病毒</option>
+                                <option value="2">勒索病毒</option>
+                                <option value="3">蠕虫病毒</option>
+								<option value="4">黑客病毒</option>
+								<option value="5">脚本病毒</option>
+								<option value="6">宏病毒</option>
+								<option value="7">后门病毒</option>
+								<option value="8">病毒种植程序病毒</option>
+								<option value="9">破坏性程序病毒</option>
+								<option value="10">玩笑病毒</option>
+								<option value="11">捆绑机病毒</option>
+								
+                            </select>
+                        </div>
                             <div class="layui-inline">
                                 <button id="btnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
                             </div>
                             <div class="layui-inline">
                                 <button id="btnUpload" class="layui-btn icon-btn"><i class="layui-icon">&#xe681;</i>上传</button>
                             </div>
+							
                         </div>
                     </div>
                     <table class="layui-table" id="sampleTable" lay-filter="sampleTable"></table>
@@ -39,9 +50,11 @@
 </div>
 
 <script type="text/html" id="sampleBar">
-    <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="details">详情</a>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="download">下载</a> -->
+	
+	<a class="layui-btn layui-btn-warm   layui-btn-xs" lay-event="sampleDetails">详情</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+	
     <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="preview">预览</a>-->
 </script>
 

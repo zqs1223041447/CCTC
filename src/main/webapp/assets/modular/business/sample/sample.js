@@ -10,20 +10,19 @@ layui.use(['table', 'form', 'func', 'HttpRequest', 'util', 'upload'], function (
 
 
     // 样本管理
-    var FileInfo = {
+    var Sample = {
         tableId: "sampleTable"
     };
 
     // 初始化表格的列
-    FileInfo.initColumn = function () {
+    Sample.initColumn = function () {
         return [[
-            
-            {field: 'fileId', hide: true, title: '主键id'},
-            {field: 'fileLocation', sort: true, title: '存储位置'},
-            {field: 'fileOriginName', sort: true, title: '文件名称'},
-            
-            {field: 'fileSuffix', sort: true, title: '文件后缀'},
-            {field: 'fileSizeInfo', sort: true, title: '文件大小'},
+            {type: 'checkbox'},
+            {field: 'sampleId', hide: true, title: '主键id'},
+            {field: 'sampleZhName', sort: true, title: '样本名称'},
+            {field: 'samplePath', sort: true, title: '存储位置'},           
+            {field: 'sampleSuffix', sort: true, title: '样本后缀'},
+            {field: 'sampleSizeKb', sort: true, title: '样本大小'},
             {
                 field: 'createTime', sort: true, title: '创建时间', templet: function (d) {
                     return util.toDateString(d.createTime);
@@ -35,28 +34,29 @@ layui.use(['table', 'form', 'func', 'HttpRequest', 'util', 'upload'], function (
     };
 
     //上传
-    var uploadInst = upload.render({
+/*   var uploadInst = upload.render({
         elem: '#btnUpload' //绑定元素
-        , url: Feng.ctxPath + '/Sample/upload?secretFlag=N' //上传接口
+        , url: Feng.ctxPath + '/Sample/upload' //上传接口
         , done: function (res) {
             //上传完毕回调
             Feng.success("上传成功!");
 
-            FileInfo.search();
+            Sample.search();
         }
         , error: function (err) {
             //请求异常回调
             Feng.error("上传失败！" + err.message);
         }
-    });
-
+    });  
+*/
 
     // 点击查询按钮
-    FileInfo.search = function () {
+    Sample.search = function () {
         var queryData = {};
-        queryData['fileOriginName'] = $("#fileOriginName").val();
+        queryData['sampleZhName'] = $("#sampleZhName").val();
+        queryData['sampleType'] = $("#sampleType").val();
         //queryData['positionCode'] = $("#positionCode").val();
-        table.reload(FileInfo.tableId, {
+        table.reload(Sample.tableId, {
             where: queryData,
             page: {curr: 1}
         });
@@ -64,21 +64,21 @@ layui.use(['table', 'form', 'func', 'HttpRequest', 'util', 'upload'], function (
 
 
     // 点击详情
-    FileInfo.openDetails = function (data) {
+    Sample.openDetails = function (data) {
         func.open({
             title: '详情',
-            content: Feng.ctxPath + '/view/fileInfoDetails?fileId=' + data.fileId,
-            tableId: FileInfo.tableId
+            content: Feng.ctxPath + '/view/sampleDetails?sampleId=' + data.sampleId,
+            tableId: Sample.tableId
         });
     };
 
 
     // 点击删除
-    FileInfo.onDeleteFile = function (data) {
+    Sample.onDeleteSample = function (data) {
         var operation = function () {
             var httpRequest = new HttpRequest(Feng.ctxPath + "/Sample/deleteReally", 'post', function (data) {
                 Feng.success("删除成功!");
-                table.reload(FileInfo.tableId);
+                table.reload(Sample.tableId);
             }, function (data) {
                 Feng.error("删除失败!" + data.message + "!");
             });
@@ -90,52 +90,52 @@ layui.use(['table', 'form', 'func', 'HttpRequest', 'util', 'upload'], function (
 
 
     // 下载
-    FileInfo.onFileDownload = function (data) {
+    Sample.onSampleDownload = function (data) {
         if (data.secretFlag === 'Y') {
-            window.location.href = Feng.ctxPath + '/Sample/privateDownload?fileId=' + data.fileId;
+            window.location.href = Feng.ctxPath + '/Sample/privateDownload?sampleId=' + data.sampleId;
         } else {
-            window.location.href = Feng.ctxPath + '/Sample/publicDownload?fileId=' + data.fileId;
+            window.location.href = Feng.ctxPath + '/Sample/publicDownload?sampleId=' + data.sampleId;
         }
     }
 
 
     // 渲染表格
     var tableResult = table.render({
-        elem: '#' + FileInfo.tableId,
-        url: Feng.ctxPath + '/Sample/fileInfoListPage',
+        elem: '#' + Sample.tableId,
+        url: Feng.ctxPath + '/Sample/sampleListPage',
         page: true,
         request: {pageName: 'pageNo', limitName: 'pageSize'}, //自定义分页参数
         height: "full-158",
         cellMinWidth: 100,
-        cols: FileInfo.initColumn(),
+        cols: Sample.initColumn(),
         parseData: Feng.parseData
     });
 
     // 搜索按钮点击事件
     $('#btnSearch').click(function () {
-        FileInfo.search();
+        Sample.search();
     });
 
 
     // 工具条点击事件
-    table.on('tool(' + FileInfo.tableId + ')', function (obj) {
+    table.on('tool(' + Sample.tableId + ')', function (obj) {
         var data = obj.data;
         var event = obj.event;
-        if (event === 'details') {
-            FileInfo.openDetails(data);
+        if (event === 'sampleDetails') {
+            Sample.openDetails(data);
         } else if (event === 'delete') {
-            FileInfo.onDeleteFile(data);
+            Sample.onDeleteSample(data);
         } else if (event === 'download') {
-            FileInfo.onFileDownload(data);
+            Sample.onSampleDownload(data);
         } else if (event === 'preview') {
-            FileInfo.openPreview(data);
+            Sample.openPreview(data);
         }
     });
 
     // 修改状态
     form.on('switch(status)', function (obj) {
-        var fileInfoId = obj.elem.value;
+        var SampleId = obj.elem.value;
         var checked = obj.elem.checked ? 1 : 2;
-        FileInfo.updateStatus(fileInfoId, checked);
+        Sample.updateStatus(sampleId, checked);
     });
 });

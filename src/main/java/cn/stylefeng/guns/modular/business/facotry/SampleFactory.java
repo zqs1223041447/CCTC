@@ -30,6 +30,10 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.stylefeng.guns.modular.business.entity.Sample;
+import cn.stylefeng.roses.kernel.auth.api.context.LoginContext;
+import cn.stylefeng.roses.kernel.auth.api.pojo.login.LoginUser;
+import cn.stylefeng.roses.kernel.dict.modular.service.DictService;
 import cn.stylefeng.roses.kernel.file.api.FileOperatorApi;
 import cn.stylefeng.roses.kernel.file.api.enums.FileLocationEnum;
 import cn.stylefeng.roses.kernel.file.api.enums.FileStatusEnum;
@@ -40,8 +44,11 @@ import cn.stylefeng.roses.kernel.file.modular.entity.SysFileInfo;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static cn.stylefeng.roses.kernel.file.api.constants.FileConstants.DEFAULT_BUCKET_NAME;
 import static cn.stylefeng.roses.kernel.file.api.constants.FileConstants.FILE_POSTFIX_SEPARATOR;
@@ -52,7 +59,7 @@ import static cn.stylefeng.roses.kernel.file.api.constants.FileConstants.FILE_PO
  * @author fengshuonan
  * @date 2020/12/30 22:16
  */
-public class SampleOperFactory {
+public class SampleFactory {
 
     /**
      * 封装附件信息
@@ -60,7 +67,7 @@ public class SampleOperFactory {
      * @author majianguo
      * @date 2020/12/27 12:55
      */
-    public static SysFileInfo createSysFileInfo(MultipartFile file, SysFileInfoRequest sysFileInfoRequest) {
+    public static Sample createSample(MultipartFile file) {
 
         FileOperatorApi fileOperatorApi = SpringUtil.getBean(FileOperatorApi.class);
 
@@ -83,31 +90,36 @@ public class SampleOperFactory {
         byte[] bytes;
         try {
             bytes = file.getBytes();
+         
             fileOperatorApi.storageFile(DEFAULT_BUCKET_NAME, finalFileName, bytes);
         } catch (IOException e) {
             throw new FileException(FileExceptionEnum.ERROR_FILE, e.getMessage());
         }
 
+        
         // 计算文件大小kb
         long fileSizeKb = Convert.toLong(NumberUtil.div(new BigDecimal(file.getSize()), BigDecimal.valueOf(1024)).setScale(0, BigDecimal.ROUND_HALF_UP));
-
-        // 计算文件大小信息
-        String fileSizeInfo = FileUtil.readableFileSize(file.getSize());
-
+        Date dNow = new Date( );
+        
+        
+       
+        String path = "C:\\CuckooFile" + File.separator + DEFAULT_BUCKET_NAME + File.separator + finalFileName;
         // 封装存储文件信息（上传替换公共信息）
-        SysFileInfo sysFileInfo = new SysFileInfo();
-        sysFileInfo.setFileLocation(FileLocationEnum.LOCAL.getCode());
-        sysFileInfo.setFileBucket(DEFAULT_BUCKET_NAME);
-        sysFileInfo.setFileObjectName(finalFileName);
-        sysFileInfo.setFileOriginName(originalFilename);
-        sysFileInfo.setFileSuffix(fileSuffix);
-        sysFileInfo.setFileSizeKb(fileSizeKb);
-        sysFileInfo.setFileSizeInfo(fileSizeInfo);
-        sysFileInfo.setFileStatus(FileStatusEnum.NEW.getCode());
-        sysFileInfo.setSecretFlag(sysFileInfoRequest.getSecretFlag());
-
+        Sample sample = new Sample();
+        LoginUser loginUser = LoginContext.me().getLoginUser();
+        
+        sample.setSampleBucket(DEFAULT_BUCKET_NAME);
+        sample.setSampleObjectName(finalFileName);
+        sample.setSampleOriginName(originalFilename);
+        sample.setSamplePath(path);
+        sample.setSampleSuffix(fileSuffix);
+        sample.setSampleSizeKb(fileSizeKb);
+        sample.setSampleStatus("0");//0：未分析
+        sample.setCreateUser(loginUser.getUserId());
+        sample.setCreateTime(dNow);
+        sample.setCreateUserName(loginUser.getAccount());
         // 返回结果
-        return sysFileInfo;
+        return sample;
     }
 
 }
